@@ -12,7 +12,11 @@ export NAVIGATOR_KEYBIND_ENABLED="${NAVIGATOR_KEYBIND_ENABLED:-false}" # Enable 
 export NAVIGATOR_KEYBIND="${NAVIGATOR_KEYBIND:-^f}" # Default keybinding (can be changed)
 
 navigator() {
-    $NAVIGATOR_PATH
+    if [[ "$NAVIGATOR_MODE" == "cd" ]]; then
+        source "$NAVIGATOR_PATH"
+    else
+        "$NAVIGATOR_PATH"
+    fi
 }
 
 if [[ "$NAVIGATOR_KEYBIND_ENABLED" == true ]]; then
