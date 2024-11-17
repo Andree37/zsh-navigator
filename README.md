@@ -14,6 +14,10 @@ The `zsh-navigator` plugin allows you to quickly navigate your workspace using `
    - Or for Oh My Zsh:
 ```bash
 git clone https://github.com/Andree37/zsh-navigator.git $ZSH_CUSTOM/plugins/zsh-navigator
+```
+
+Add the plugin to your `.zshrc`:
+```bash
 plugins=(zsh-navigator)
 ```
 
@@ -38,11 +42,6 @@ export NAVIGATOR_MODE="tmux"
 export NAVIGATOR_MODE="cd"
 ```
 
-### Workspace Structure
-
-If your workspace uses the `WORKSPACE/src/PROJECT` structure (instead of `WORKSPACE/PROJECT`), add the following to your `~/.zshrc`:
-export NAVIGATOR_SRC_STRUCTURE=true
-
 ### Keybinding
 
 Keybinding is **disabled by default**. To enable it:
@@ -61,6 +60,20 @@ export NAVIGATOR_KEYBIND="^f"
 ```bash
 export NAVIGATOR_KEYBIND_ENABLED=true
 export NAVIGATOR_KEYBIND="^g"
+```
+
+### Workspace Structure
+
+If your workspace uses the `WORKSPACE/src/PROJECT` structure (instead of `WORKSPACE/PROJECT`), add the following to your `~/.zshrc`:
+export NAVIGATOR_SRC_STRUCTURE=true
+
+
+### Example Configuration
+
+```bash
+plugins=(git zsh-navigator)
+export NAVIGATOR_KEYBIND_ENABLED=true
+export NAVIGATOR_MODE="tmux"
 ```
 
 ---
