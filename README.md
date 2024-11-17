@@ -65,7 +65,9 @@ export NAVIGATOR_KEYBIND="^g"
 ### Workspace Structure
 
 If your workspace uses the `WORKSPACE/src/PROJECT` structure (instead of `WORKSPACE/PROJECT`), add the following to your `~/.zshrc`:
+```bash
 export NAVIGATOR_SRC_STRUCTURE=true
+```
 
 
 ### Example Configuration

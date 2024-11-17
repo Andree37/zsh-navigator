@@ -5,7 +5,7 @@ navigator_mode=${NAVIGATOR_MODE:-tmux} # Default to tmux mode if NAVIGATOR_MODE 
 workspace_src_structure=${NAVIGATOR_SRC_STRUCTURE:-false} # Default to false if NAVIGATOR_SRC_STRUCTURE is unset
 
 if [[ "$workspace_src_structure" == true ]]; then
-    find_depth=(-mindepth 2 -maxdepth 3 -type d -path "*/src/*")
+    find_depth=(-mindepth 2 -maxdepth 4 -type d -path "*/src/*")
     awk_field='{print $(NF)"("$(NF-2)")"}'
 else
     find_depth=(-mindepth 2 -maxdepth 2 -type d)
@@ -16,7 +16,8 @@ selected=$(find "$base_dir" "${find_depth[@]}" | awk -F '/' "$awk_field" | sort 
 
 if [[ -z $selected ]]; then
     echo "No selection made."
-    exit 0
+    # if we are in tmux, exit 0, otherwise return 0
+    [[ $navigator_mode == "tmux" ]] && exit 0 || return 0
 fi
 
 package=$(echo "$selected" | sed -E 's|\((.*)\)||' | xargs)
