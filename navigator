@@ -54,11 +54,9 @@ fi
 
 if [[ "$navigator_mode" == "tmux" ]]; then
     # TMUX
-    export NAVIGATOR_ORIGINAL_PATH="$package_path"
 
-    # get the better session name if possible
-    if [[ -z "$package" && -z "$project" ]]
-    then
+    # get a better session name if possible
+    if [[ -z "$package" && -z "$project" ]]; then
         session_name=$(echo "${package_path}" | tr / _)
     else
         session_name=$(echo "${package}_${project}" | tr / _)
@@ -67,20 +65,19 @@ if [[ "$navigator_mode" == "tmux" ]]; then
     tmux_running=$(pgrep tmux)
 
     if [[ -z $tmux_running ]]; then
-        tmux new-session -s "$session_name" -c "$package_path"
+        tmux new-session -s "$session_name" -c "$package_path" -e NAVIGATOR_ORIGINAL_PATH="$package_path"
         exit 0
     fi
 
     if ! tmux has-session -t="$session_name" 2> /dev/null; then
-        # new session
-        tmux new-session -ds "$session_name" -c "$package_path"
+        tmux new-session -ds "$session_name" -c "$package_path" -e NAVIGATOR_ORIGINAL_PATH="$package_path"
     fi
 
     if [[ -z $TMUX ]]; then
         # not inside tmux, attach to the session
         tmux attach-session -t "$session_name"
     else
-        # we are inside tmux, switch to the target session
+        # inside tmux, switch to the target session
         tmux switch-client -t "$session_name" 2>/dev/null || tmux attach-session -t "$session_name"
     fi
 else
