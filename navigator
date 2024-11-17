@@ -57,16 +57,23 @@ if [[ "$navigator_mode" == "tmux" ]]; then
     session_name=$(echo "${package_path}" | tr / _ | tr . _)
     tmux_running=$(pgrep tmux)
 
-    if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    if [[ -z $tmux_running ]]; then
         tmux new-session -s "$session_name" -c "$package_path"
         exit 0
     fi
 
     if ! tmux has-session -t="$session_name" 2> /dev/null; then
+        # new session
         tmux new-session -ds "$session_name" -c "$package_path"
     fi
 
-    tmux switch-client -t "$session_name"
+    if [[ -z $TMUX ]]; then
+        # not inside tmux, attach to the session
+        tmux attach-session -t "$session_name"
+    else
+        # we are inside tmux, switch to the target session
+        tmux switch-client -t "$session_name" 2>/dev/null || tmux attach-session -t "$session_name"
+    fi
 else
     # CD
     cd "$package_path" && clear || {
