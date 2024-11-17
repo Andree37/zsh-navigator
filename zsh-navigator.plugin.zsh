@@ -9,9 +9,13 @@ fi
 export NAVIGATOR_MODE="${NAVIGATOR_MODE:-tmux}" # Options: "tmux" or "cd"
 export NAVIGATOR_BASE_DIR="${NAVIGATOR_BASE_DIR:-$HOME/github}" # Base directory
 export NAVIGATOR_STRUCTURE="${NAVIGATOR_STRUCTURE:-workspace}" # Options: "unsorted", "workspace", "workspace_src"
+
+# Keybinding configuration
 export NAVIGATOR_KEYBIND_ENABLED="${NAVIGATOR_KEYBIND_ENABLED:-true}" # Enable keybinding? "true" or "false"
 export NAVIGATOR_KEYBIND="${NAVIGATOR_KEYBIND:-^f}" # Default keybinding (can be changed)
-export NAVIGATOR_HOME_KEYBIND="${NAVIGATOR_KEYBIND:-^h}" # Default keybinding (can be changed)
+export NAVIGATOR_HOME_KEYBIND="${NAVIGATOR_HOME_KEYBIND:-^h}" # Default keybinding (can be changed)
+
+# Home configuration
 export NAVIGATOR_HOME_PATH="${NAVIGATOR_HOME_PATH:-.}" # Default path to return to
 
 navigator() {
