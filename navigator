@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-base_dir="$HOME/github"
+base_dir=${NAVIGATOR_BASE_DIR:-$HOME/github} # Default to $HOME/github mode if NAVIGATOR_BASE_DIR is unset
 navigator_mode=${NAVIGATOR_MODE:-tmux} # Default to tmux mode if NAVIGATOR_MODE is unset
 workspace_src_structure=${NAVIGATOR_SRC_STRUCTURE:-false} # Default to false if NAVIGATOR_SRC_STRUCTURE is unset
 
 if [[ "$workspace_src_structure" == true ]]; then
-    find_depth=(-mindepth 2 -maxdepth 4 -type d -path "*/src/*")
+    find_depth=(-mindepth 2 -maxdepth 3 -type d -path "*/src/*")
     awk_field='{print $(NF)"("$(NF-2)")"}'
 else
     find_depth=(-mindepth 2 -maxdepth 2 -type d)
