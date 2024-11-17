@@ -1,49 +1,41 @@
 #!/usr/bin/env bash
 
-TMUX_SESSION=true
-WORKSPACE_SRC_STRUCTURE=false
+base_dir="$HOME/github"
+navigator_mode=${NAVIGATOR_MODE:-tmux} # Default to tmux mode if NAVIGATOR_MODE is unset
+workspace_src_structure=${NAVIGATOR_SRC_STRUCTURE:-false} # Default to false if NAVIGATOR_SRC_STRUCTURE is unset
 
-BASE_DIR="$HOME/github"
-
-if [[ $# -eq 1 ]]; then
-    selected=$1
+if [[ "$workspace_src_structure" == true ]]; then
+    find_depth=(-mindepth 2 -maxdepth 3 -type d -path "*/src/*")
+    awk_field='{print $(NF)"("$(NF-2)")"}'
 else
-    if [[ "$WORKSPACE_SRC_STRUCTURE" == true ]]; then
-        find_depth=(-mindepth 2 -maxdepth 3 -type d -path "*/src/*")
-        awk_field='{print $(NF)"("$(NF-2)")"}'
-    else
-        find_depth=(-mindepth 2 -maxdepth 2 -type d)
-        awk_field='{print $(NF)"("$(NF-1)")"}'
-    fi
-    selected=$(find "$BASE_DIR" "${find_depth[@]}" | awk -F '/' "$awk_field" | sort -u | fzf)
+    find_depth=(-mindepth 2 -maxdepth 2 -type d)
+    awk_field='{print $(NF)"("$(NF-1)")"}'
 fi
 
+selected=$(find "$base_dir" "${find_depth[@]}" | awk -F '/' "$awk_field" | sort -u | fzf)
+
 if [[ -z $selected ]]; then
-    # No selection
-    if [[ "$TMUX_SESSION" == true ]]; then
-        exit 0
-    else
-        return 0
-    fi
+    echo "No selection made."
+    exit 0
 fi
 
 package=$(echo "$selected" | sed -E 's|\((.*)\)||' | xargs)
 project=$(echo "$selected" | sed -E 's|.*\((.*)\)|\1|' | xargs)
 
-if [[ "$WORKSPACE_SRC_STRUCTURE" == true ]]; then
-    package_path="$BASE_DIR/$project/src/$package"
+if [[ "$workspace_src_structure" == true ]]; then
+    package_path="$base_dir/$project/src/$package"
 else
-    package_path="$BASE_DIR/$project/$package"
+    package_path="$base_dir/$project/$package"
 fi
 
 if [[ ! -d $package_path ]]; then
     echo "Error: Package directory not found: $package_path"
-    return 1
+    exit 1
 fi
 
-if [[ "$TMUX_SESSION" == true ]]; then
+if [[ "$navigator_mode" == "tmux" ]]; then
+    # TMUX
     session_name=$(echo "${project}_${package}" | tr . _)
-
     tmux_running=$(pgrep tmux)
 
     if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
@@ -57,5 +49,9 @@ if [[ "$TMUX_SESSION" == true ]]; then
 
     tmux switch-client -t "$session_name"
 else
-    cd "$package_path" && clear || return 1
+    # CD
+    cd "$package_path" && clear || {
+        echo "Failed to change directory to: $package_path"
+        exit 1
+    }
 fi
