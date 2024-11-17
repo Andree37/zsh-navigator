@@ -23,5 +23,5 @@ navigator() {
 
 if [[ "$NAVIGATOR_KEYBIND_ENABLED" == true ]]; then
     bindkey -s "$NAVIGATOR_KEYBIND" "navigator\n"
-    bindkey -s "^b" "cd $NAVIGATOR_ORIGINAL_PATH\n"
+    bindkey -s "^h" "cd $NAVIGATOR_ORIGINAL_PATH\n"
 fi
