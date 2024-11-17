@@ -11,6 +11,7 @@ export NAVIGATOR_BASE_DIR="${NAVIGATOR_BASE_DIR:-$HOME/github}" # Base directory
 export NAVIGATOR_STRUCTURE="${NAVIGATOR_STRUCTURE:-workspace}" # Options: "unsorted", "workspace", "workspace_src"
 export NAVIGATOR_KEYBIND_ENABLED="${NAVIGATOR_KEYBIND_ENABLED:-false}" # Enable keybinding? "true" or "false"
 export NAVIGATOR_KEYBIND="${NAVIGATOR_KEYBIND:-^f}" # Default keybinding (can be changed)
+export NAVIGATOR_ORIGINAL_PATH="${NAVIGATOR_ORIGINAL_PATH:-.}" # Default path to return to
 
 navigator() {
     if [[ "$NAVIGATOR_MODE" == "cd" ]]; then
@@ -22,4 +23,5 @@ navigator() {
 
 if [[ "$NAVIGATOR_KEYBIND_ENABLED" == true ]]; then
     bindkey -s "$NAVIGATOR_KEYBIND" "navigator\n"
+    bindkey -s "^b" "cd $NAVIGATOR_ORIGINAL_PATH\n"
 fi

@@ -54,6 +54,7 @@ fi
 
 if [[ "$navigator_mode" == "tmux" ]]; then
     # TMUX
+    export NAVIGATOR_ORIGINAL_PATH="$package_path"
     session_name=$(echo "${package_path}" | tr / _ | tr . _)
     tmux_running=$(pgrep tmux)
 
