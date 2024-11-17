@@ -1,6 +1,10 @@
 export PATH="${0:A:h}:$PATH"
 export NAVIGATOR_PATH="${0:A:h}/navigator"
 
+if [[ ! -x "$NAVIGATOR_PATH" ]]; then
+    chmod +x "$NAVIGATOR_PATH"
+fi
+
 # Default configuration (can be overridden in ~/.zshrc)
 export NAVIGATOR_MODE="${NAVIGATOR_MODE:-tmux}" # Options: "tmux" or "cd"
 export NAVIGATOR_SRC_STRUCTURE="${NAVIGATOR_SRC_STRUCTURE:-false}" # Options: "true" or "false"
