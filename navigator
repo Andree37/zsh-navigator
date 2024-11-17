@@ -61,7 +61,7 @@ if [[ "$navigator_mode" == "tmux" ]]; then
     then
         session_name=$(echo "${package_path}" | tr / _)
     else
-        session_name=$(echo "${project}_${package}" | tr / _)
+        session_name=$(echo "${package}_${project}" | tr / _)
     fi
 
     tmux_running=$(pgrep tmux)
