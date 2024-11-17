@@ -69,6 +69,13 @@ If your workspace uses the `WORKSPACE/src/PROJECT` structure (instead of `WORKSP
 export NAVIGATOR_SRC_STRUCTURE=true
 ```
 
+### Base Directory
+
+If you want to navigate to a base directory, set the `NAVIGATOR_BASE_DIR` variable in your `~/.zshrc`:
+```bash
+export NAVIGATOR_BASE_DIR="$HOME/Projects"
+```
+
 
 ### Example Configuration
 
