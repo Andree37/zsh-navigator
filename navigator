@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+TMUX_SESSION=true
+WORKSPACE_SRC_STRUCTURE=false
+
+BASE_DIR="$HOME/github"
+
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    if [[ "$WORKSPACE_SRC_STRUCTURE" == true ]]; then
+        find_depth=(-mindepth 2 -maxdepth 3 -type d -path "*/src/*")
+        awk_field='{print $(NF)"("$(NF-2)")"}'
+    else
+        find_depth=(-mindepth 2 -maxdepth 2 -type d)
+        awk_field='{print $(NF)"("$(NF-1)")"}'
+    fi
+    selected=$(find "$BASE_DIR" "${find_depth[@]}" | awk -F '/' "$awk_field" | sort -u | fzf)
+fi
+
+if [[ -z $selected ]]; then
+    # No selection
+    if [[ "$TMUX_SESSION" == true ]]; then
+        exit 0
+    else
+        return 0
+    fi
+fi
+
+package=$(echo "$selected" | sed -E 's|\((.*)\)||' | xargs)
+project=$(echo "$selected" | sed -E 's|.*\((.*)\)|\1|' | xargs)
+
+if [[ "$WORKSPACE_SRC_STRUCTURE" == true ]]; then
+    package_path="$BASE_DIR/$project/src/$package"
+else
+    package_path="$BASE_DIR/$project/$package"
+fi
+
+if [[ ! -d $package_path ]]; then
+    echo "Error: Package directory not found: $package_path"
+    return 1
+fi
+
+if [[ "$TMUX_SESSION" == true ]]; then
+    session_name=$(echo "${project}_${package}" | tr . _)
+
+    tmux_running=$(pgrep tmux)
+
+    if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+        tmux new-session -s "$session_name" -c "$package_path"
+        exit 0
+    fi
+
+    if ! tmux has-session -t="$session_name" 2> /dev/null; then
+        tmux new-session -ds "$session_name" -c "$package_path"
+    fi
+
+    tmux switch-client -t "$session_name"
+else
+    cd "$package_path" && clear || return 1
+fi
