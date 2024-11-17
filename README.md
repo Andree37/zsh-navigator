@@ -26,84 +26,54 @@ plugins=(zsh-navigator)
 source ~/.zshrc
 ```
 
-## Configuration
+---
 
-### Mode Selection
+## Configuration Options
 
-Set the navigation mode in your `~/.zshrc`:
+### Overview
 
-- TMUX Mode (default): Manage `tmux` sessions for projects.
-```bash
-export NAVIGATOR_MODE="tmux"
-```
+| **Variable**                | **Default**         | **Type**         | **Description**                                                                                          | **Examples**                                      |
+|-----------------------------|---------------------|------------------|----------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| `NAVIGATOR_MODE`            | `tmux`             | Mode             | Set the navigation mode.                                                                                 | `tmux`, `cd`                                     |
+| `NAVIGATOR_KEYBIND_ENABLED` | `false`            | Keybinding       | Enable keybindings.                                                                                      | `true`, `false`                                  |
+| `NAVIGATOR_KEYBIND`         | `^f`               | Keybinding       | Keybinding to launch the navigator.                                                                      | `^g`, `^n`                                       |
+| `NAVIGATOR_ORIGINAL_PATH_KEYBIND` | `^h`        | Keybinding       | Keybinding to return to the original directory.                                                          | `^x`, `^o`                                       |
+| `NAVIGATOR_STRUCTURE`       | `workspace`        | Structure        | Define the workspace structure.                                                                          | `workspace`, `workspace_src`, `unsorted`        |
+| `NAVIGATOR_BASE_DIR`        | `$HOME/github`     | Directory        | Set the base directory for navigation.                                                                   | `/path/to/projects`                              |
 
-- CD Mode: Change the working directory.
-```bash
-export NAVIGATOR_MODE="cd"
-```
+---
 
-### Keybinding
+### Detailed Explanation
 
-Keybinding is **disabled by default**. To enable it:
+- **`NAVIGATOR_MODE`**: Controls how the navigator operates (`tmux` for session management, `cd` for changing directories).
+- **`NAVIGATOR_KEYBIND_ENABLED`**: Toggles keybinding functionality (`true` to enable, `false` to disable).
+- **`NAVIGATOR_KEYBIND`**: Defines the keybinding for launching the navigator (default is `Ctrl+f`).
+- **`NAVIGATOR_ORIGINAL_PATH_KEYBIND`**: Sets the keybinding for returning to the original directory (default is `Ctrl+h`).
+- **`NAVIGATOR_STRUCTURE`**: Configures workspace organization (`workspace`, `workspace_src`, or `unsorted`).
+- **`NAVIGATOR_BASE_DIR`**: Specifies the root directory for navigation.
 
-1. Set `NAVIGATOR_KEYBIND_ENABLED` to `true` in your `~/.zshrc`:
-```bash
-export NAVIGATOR_KEYBIND_ENABLED=true
-```
-
-2. (Optional) Set your preferred keybinding (default is `Ctrl+f`):
-```bash
-export NAVIGATOR_KEYBIND="^f"
-```
-
-3. (Optional) Set your preferred keybinding to go back into the initial directory (default is `Ctrl+h`):
-```bash
-export NAVIGATOR_ORIGINAL_PATH="^h"
-```
-
-4. Example Configuration in `.zshrc`:
-```bash
-export NAVIGATOR_KEYBIND_ENABLED=true
-export NAVIGATOR_KEYBIND="^g"
-```
-
-### Workspace Structure
-
-The `NAVIGATOR_STRUCTURE` variable allows you to define how your workspace is organized. Set it in your `~/.zshrc` to one of the following values:
-
-1. workspace (default):
-    - For directories structured as WORKSPACE/PROJECT/files.
-```bash
-export NAVIGATOR_STRUCTURE="workspace"
-```
-
-2. workspace_src:
-    - For directories structured as WORKSPACE/src/PROJECT/files.
-```bash
-export NAVIGATOR_STRUCTURE="workspace_src"
-```
-
-3. unsorted:
-    - For a flat list of directories directly under the base directory.
-```bash
-export NAVIGATOR_STRUCTURE="unsorted"
-```
-
-### Base Directory
-
-If you want to navigate to a base directory, set the `NAVIGATOR_BASE_DIR` variable in your `~/.zshrc`:
-```bash
-export NAVIGATOR_BASE_DIR="$HOME/Projects"
-```
-
+---
 
 ### Example Configuration
 
+Combine these settings in your `~/.zshrc` for a customized experience:
+
 ```bash
 plugins=(git zsh-navigator)
+
+# Enable keybindings
 export NAVIGATOR_KEYBIND_ENABLED=true
+export NAVIGATOR_KEYBIND="^f"
+export NAVIGATOR_ORIGINAL_PATH_KEYBIND="^h"
+
+# Set navigation mode
 export NAVIGATOR_MODE="tmux"
+
+# Define workspace structure
 export NAVIGATOR_STRUCTURE="workspace"
+
+# Set base directory
+export NAVIGATOR_BASE_DIR="$HOME/Projects"
 ```
 
 ---
