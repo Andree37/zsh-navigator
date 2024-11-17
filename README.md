@@ -51,12 +51,17 @@ Keybinding is **disabled by default**. To enable it:
 export NAVIGATOR_KEYBIND_ENABLED=true
 ```
 
-2. (Optional) Set your preferred keybinding (default is `Ctrl+F`):
+2. (Optional) Set your preferred keybinding (default is `Ctrl+f`):
 ```bash
 export NAVIGATOR_KEYBIND="^f"
 ```
 
-3. Example Configuration in `.zshrc`:
+3. (Optional) Set your preferred keybinding to go back into the initial directory (default is `Ctrl+h`):
+```bash
+export NAVIGATOR_ORIGINAL_PATH="^h"
+```
+
+4. Example Configuration in `.zshrc`:
 ```bash
 export NAVIGATOR_KEYBIND_ENABLED=true
 export NAVIGATOR_KEYBIND="^g"
@@ -107,7 +112,7 @@ export NAVIGATOR_STRUCTURE="workspace"
 
 1. Run the navigator:
    - Manually: `navigator`
-   - Or, if keybinding is enabled: Press your configured key (e.g., `Ctrl+F`).
+   - Or, if keybinding is enabled: Press your configured key (e.g., `Ctrl+f`).
 
 2. Use `fzf` to select a directory.
 
