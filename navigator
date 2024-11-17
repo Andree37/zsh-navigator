@@ -1,32 +1,51 @@
 #!/usr/bin/env bash
 
-base_dir=${NAVIGATOR_BASE_DIR:-$HOME/github} # Default to $HOME/github mode if NAVIGATOR_BASE_DIR is unset
+# Configuration
+base_dir=${NAVIGATOR_BASE_DIR:-$HOME/github} # Default to $HOME/github if NAVIGATOR_BASE_DIR is unset
 navigator_mode=${NAVIGATOR_MODE:-tmux} # Default to tmux mode if NAVIGATOR_MODE is unset
-workspace_src_structure=${NAVIGATOR_SRC_STRUCTURE:-false} # Default to false if NAVIGATOR_SRC_STRUCTURE is unset
+navigator_structure=${NAVIGATOR_STRUCTURE:-workspace} # Options: "unsorted", "workspace", "workspace_src"
 
-if [[ "$workspace_src_structure" == true ]]; then
-    find_depth=(-mindepth 2 -maxdepth 3 -type d -path "*/src/*")
-    awk_field='{print $(NF)"("$(NF-2)")"}'
-else
-    find_depth=(-mindepth 2 -maxdepth 2 -type d)
-    awk_field='{print $(NF)"("$(NF-1)")"}'
-fi
+# Determine the find and awk logic based on the structure
+case $navigator_structure in
+    unsorted)
+        # For unsorted packages, just list all directories under the base directory
+        find_depth=(-mindepth 1 -type d)
+        awk_field='{print $NF}'
+        ;;
+    workspace_src)
+        # For WORKSPACE/src/PROJECT structure
+        find_depth=(-mindepth 2 -maxdepth 3 -type d -path "*/src/*")
+        awk_field='{print $(NF)"("$(NF-2)")"}'
+        ;;
+    workspace)
+        # For WORKSPACE/PROJECT structure
+        find_depth=(-mindepth 2 -maxdepth 2 -type d)
+        awk_field='{print $(NF)"("$(NF-1)")"}'
+        ;;
+    *)
+        echo "Invalid NAVIGATOR_STRUCTURE: $navigator_structure. Must be 'unsorted', 'workspace', or 'workspace_src'."
+        exit 1
+        ;;
+esac
 
 selected=$(find "$base_dir" "${find_depth[@]}" | awk -F '/' "$awk_field" | sort -u | fzf)
 
 if [[ -z $selected ]]; then
     echo "No selection made."
-    # if we are in tmux, exit 0, otherwise return 0
     [[ $navigator_mode == "tmux" ]] && exit 0 || return 0
 fi
 
-package=$(echo "$selected" | sed -E 's|\((.*)\)||' | xargs)
-project=$(echo "$selected" | sed -E 's|.*\((.*)\)|\1|' | xargs)
-
-if [[ "$workspace_src_structure" == true ]]; then
-    package_path="$base_dir/$project/src/$package"
+if [[ "$navigator_structure" == "unsorted" ]]; then
+    package_path="$base_dir/$selected"
 else
-    package_path="$base_dir/$project/$package"
+    package=$(echo "$selected" | sed -E 's|\((.*)\)||' | xargs)
+    project=$(echo "$selected" | sed -E 's|.*\((.*)\)|\1|' | xargs)
+
+    if [[ "$navigator_structure" == "workspace_src" ]]; then
+        package_path="$base_dir/$project/src/$package"
+    else
+        package_path="$base_dir/$project/$package"
+    fi
 fi
 
 if [[ ! -d $package_path ]]; then
@@ -36,7 +55,7 @@ fi
 
 if [[ "$navigator_mode" == "tmux" ]]; then
     # TMUX
-    session_name=$(echo "${project}_${package}" | tr . _)
+    session_name=$(echo "${selected}" | tr / _ | tr . _)
     tmux_running=$(pgrep tmux)
 
     if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then

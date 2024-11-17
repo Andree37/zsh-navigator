@@ -64,9 +64,24 @@ export NAVIGATOR_KEYBIND="^g"
 
 ### Workspace Structure
 
-If your workspace uses the `WORKSPACE/src/PROJECT` structure (instead of `WORKSPACE/PROJECT`), add the following to your `~/.zshrc`:
+The `NAVIGATOR_STRUCTURE` variable allows you to define how your workspace is organized. Set it in your `~/.zshrc` to one of the following values:
+
+1. workspace (default):
+    - For directories structured as WORKSPACE/PROJECT/files.
 ```bash
-export NAVIGATOR_SRC_STRUCTURE=true
+export NAVIGATOR_STRUCTURE="workspace"
+```
+
+2. workspace_src:
+    - For directories structured as WORKSPACE/src/PROJECT/files.
+```bash
+export NAVIGATOR_STRUCTURE="workspace_src"
+```
+
+3. unsorted:
+    - For a flat list of directories directly under the base directory.
+```bash
+export NAVIGATOR_STRUCTURE="unsorted"
 ```
 
 ### Base Directory
@@ -83,6 +98,7 @@ export NAVIGATOR_BASE_DIR="$HOME/Projects"
 plugins=(git zsh-navigator)
 export NAVIGATOR_KEYBIND_ENABLED=true
 export NAVIGATOR_MODE="tmux"
+export NAVIGATOR_STRUCTURE="workspace"
 ```
 
 ---
