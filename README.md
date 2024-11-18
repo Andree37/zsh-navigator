@@ -89,15 +89,3 @@ export NAVIGATOR_BASE_DIR="$HOME/Projects"
 3. Depending on the mode:
    - TMUX Mode: Opens or switches to a `tmux` session.
    - CD Mode: Navigates to the selected directory in your terminal.
-
-## Example Workflow
-
-### TMUX Mode
-1. Trigger the navigator (manually or with a keybinding).
-2. Select a project using `fzf`.
-3. The plugin starts or switches to a `tmux` session for the project.
-
-### CD Mode
-1. Trigger the navigator (manually or with a keybinding).
-2. Select a project using `fzf`.
-3. The terminal switches to the selected directory.
