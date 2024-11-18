@@ -3,7 +3,7 @@
 # Configuration
 base_dir=${NAVIGATOR_BASE_DIR:-$HOME/github} # Default to $HOME/github if NAVIGATOR_BASE_DIR is unset
 navigator_mode=${NAVIGATOR_MODE:-tmux} # Default to tmux mode if NAVIGATOR_MODE is unset
-navigator_structure=${NAVIGATOR_STRUCTURE:-workspace} # Options: "unsorted", "workspace", "workspace_src"
+navigator_structure=${NAVIGATOR_STRUCTURE:-unsorted} # Options: "unsorted", "workspace", "workspace_src"
 
 case $navigator_structure in
     unsorted)

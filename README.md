@@ -38,7 +38,7 @@ source ~/.zshrc
 | `NAVIGATOR_KEYBIND_ENABLED` | `false`            | Keybinding       | Enable keybindings.                                                                                      | `true`, `false`                                  |
 | `NAVIGATOR_KEYBIND`         | `^f`               | Keybinding       | Keybinding to launch the navigator.                                                                      | `^g`, `^n`                                       |
 | `NAVIGATOR_ORIGINAL_PATH_KEYBIND` | `^h`        | Keybinding       | Keybinding to return to the original directory.                                                          | `^x`, `^o`                                       |
-| `NAVIGATOR_STRUCTURE`       | `workspace`        | Structure        | Define the workspace structure.                                                                          | `workspace`, `workspace_src`, `unsorted`        |
+| `NAVIGATOR_STRUCTURE`       | `unsorted`        | Structure        | Define the workspace structure.                                                                          | `workspace`, `workspace_src`, `unsorted`        |
 | `NAVIGATOR_BASE_DIR`        | `$HOME/github`     | Directory        | Set the base directory for navigation.                                                                   | `/path/to/projects`                              |
 
 ---
@@ -51,6 +51,29 @@ source ~/.zshrc
 - **`NAVIGATOR_ORIGINAL_PATH_KEYBIND`**: Sets the keybinding for returning to the original directory (default is `Ctrl+h`).
 - **`NAVIGATOR_STRUCTURE`**: Configures workspace organization (`workspace`, `workspace_src`, or `unsorted`).
 - **`NAVIGATOR_BASE_DIR`**: Specifies the root directory for navigation.
+
+### Structure Options
+
+The `NAVIGATOR_STRUCTURE` variable allows you to define the structure of your workspace. The following options are available:
+
+- **`workspace`**: Expects a workspace directory with subdirectories for each project. For example:
+  ```
+  ~/Projects
+  ├── package1
+  ├── package2
+  ├── package3
+  ```
+
+- **`workspace_src`**: Expects a workspace directory with subdirectories for each project containing a `src` directory. For example:
+  ```
+    ~/Projects
+    ├── src
+    │   ├── package1
+    │   ├── package2
+    │   ├── package3
+```
+
+- **`unsorted`**: Does not expect any specific structure. All directories are listed without any assumptions and this is the default option.
 
 ---
 
