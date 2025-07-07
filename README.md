@@ -29,6 +29,8 @@ plugins=(zsh-navigator)
 source ~/.zshrc
 ```
 
+![example gif](static/example.gif)
+
 ---
 
 ## Configuration Options
