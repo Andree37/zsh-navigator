@@ -2,8 +2,9 @@
 
 # Configuration
 base_dir=${NAVIGATOR_BASE_DIR:-$HOME/github} # Default to $HOME/github if NAVIGATOR_BASE_DIR is unset
-navigator_mode=${NAVIGATOR_MODE:-tmux} # Default to tmux mode if NAVIGATOR_MODE is unset
+navigator_mode=${NAVIGATOR_MODE:-tmux}       # Default to tmux mode if NAVIGATOR_MODE is unset
 navigator_structure=${NAVIGATOR_STRUCTURE:-unsorted} # Options: "unsorted", "workspace", "workspace_src"
+navigator_window_naming=${NAVIGATOR_WINDOW_NAMING:-true}  # Default to false if NAVIGATOR_WINDOW_NAMING is unset
 
 case $navigator_structure in
     unsorted)
@@ -53,35 +54,47 @@ if [[ ! -d $package_path ]]; then
 fi
 
 if [[ "$navigator_mode" == "tmux" ]]; then
-    # TMUX
+    rename_tmux_window() {
+        local session="$1"
+        local name="$2"
+        tmux setw -t "$session" automatic-rename off
+        tmux rename-window -t "$session" "$name"
+    }
 
-    # get a better session name if possible
     if [[ -z "$package" && -z "$project" ]]; then
         session_name=$(echo "${package_path}" | tr / _)
+        window_name=$(basename "$package_path")
     else
         session_name=$(echo "${package}_${project}" | tr / _)
+        window_name="$package"
     fi
 
-    tmux_running=$(pgrep tmux)
+    session_created=false
 
-    if [[ -z $tmux_running ]]; then
-        tmux new-session -s "$session_name" -c "$package_path" -e NAVIGATOR_ORIGINAL_PATH="$package_path"
-        exit 0
-    fi
-
-    if ! tmux has-session -t="$session_name" 2> /dev/null; then
+    if ! pgrep -x tmux > /dev/null; then
         tmux new-session -ds "$session_name" -c "$package_path" -e NAVIGATOR_ORIGINAL_PATH="$package_path"
+        session_created=true
+    else
+        if ! tmux has-session -t="$session_name" 2> /dev/null; then
+            tmux new-session -ds "$session_name" -c "$package_path" -e NAVIGATOR_ORIGINAL_PATH="$package_path"
+            session_created=true
+        fi
+    fi
+
+    if [[ "$navigator_window_naming" == "true" && "$session_created" == true ]]; then
+        rename_tmux_window "$session_name" "$window_name"
     fi
 
     if [[ -z $TMUX ]]; then
-        # not inside tmux, attach to the session
+        # Not inside tmux, attach to the session
         tmux attach-session -t "$session_name"
     else
-        # inside tmux, switch to the target session
+        # Inside tmux, switch to the target session or attach if switch fails
         tmux switch-client -t "$session_name" 2>/dev/null || tmux attach-session -t "$session_name"
     fi
+
 else
-    # CD
+    # CD mode: change directory and clear terminal
     cd "$package_path" && clear || {
         echo "Failed to change directory to: $package_path"
         exit 1

@@ -45,6 +45,7 @@ source ~/.zshrc
 | `NAVIGATOR_ORIGINAL_PATH_KEYBIND` | `^h`           | Keybinding | Keybinding to return to the original directory. | `^x`, `^o`                               |
 | `NAVIGATOR_STRUCTURE`             | `unsorted`     | Structure  | Define the workspace structure.                 | `workspace`, `workspace_src`, `unsorted` |
 | `NAVIGATOR_BASE_DIR`              | `$HOME/github` | Directory  | Set the base directory for navigation.          | `/path/to/projects`                      |
+| `NAVIGATOR_WINDOW_NAMING`         | `false`        | Boolean    | Enable automatic renaming of tmux windows.      | `true`, `false`                          |
 
 ---
 
@@ -56,6 +57,8 @@ source ~/.zshrc
 - **`NAVIGATOR_ORIGINAL_PATH_KEYBIND`**: Sets the keybinding for returning to the original directory (default is `Ctrl+h`).
 - **`NAVIGATOR_STRUCTURE`**: Configures workspace organization (`workspace`, `workspace_src`, or `unsorted`).
 - **`NAVIGATOR_BASE_DIR`**: Specifies the root directory for navigation.
+- **`NAVIGATOR_WINDOW_NAMING`**: Enables or disables automatic renaming of the current tmux window based on the selected package name.
+  - IMPORTANT that this option is only effective in `tmux` mode and it requires additional configuration in your `~/.tmux.conf` file to work properly. See the [tmux configuration section](#tmux-configuration) below for details.
 
 ### Structure Options
 
@@ -120,3 +123,12 @@ export NAVIGATOR_BASE_DIR="$HOME/Projects"
 3. Depending on the mode:
     - TMUX Mode: Opens or switches to a `tmux` session.
     - CD Mode: Navigates to the selected directory in your terminal.
+
+## TMUX Configuration
+To enable automatic renaming of tmux windows based on the selected package name, add the following to your `~/.tmux.conf`:
+
+```bash
+# Enable automatic renaming of tmux windows
+set-option -g set-titles on
+set-option -g set-titles-string "#W"
+```
