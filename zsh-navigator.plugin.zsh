@@ -75,10 +75,23 @@ navigator() {
 }
 
 # Set up keybindings
+_zsh_navigator_widget() {
+    zle push-input
+    BUFFER="navigator"
+    zle accept-line
+}
+
+_zsh_navigator_home_widget() {
+    zle push-input
+    BUFFER="cd \$NAVIGATOR_ORIGINAL_PATH"
+    zle accept-line
+}
 _zsh_navigator_bind_keys() {
     if [[ "$ZSH_NAVIGATOR_KEYBIND_ENABLED" == "true" ]]; then
-        bindkey -s "$ZSH_NAVIGATOR_KEYBIND" "navigator\n"
-        bindkey -s "$ZSH_NAVIGATOR_ORIGINAL_PATH_KEYBIND" "cd \$NAVIGATOR_ORIGINAL_PATH\n"
+        zle -N _zsh_navigator_widget
+        zle -N _zsh_navigator_home_widget
+        bindkey "$ZSH_NAVIGATOR_KEYBIND" _zsh_navigator_widget
+        bindkey "$ZSH_NAVIGATOR_ORIGINAL_PATH_KEYBIND" _zsh_navigator_home_widget
     fi
 }
 
